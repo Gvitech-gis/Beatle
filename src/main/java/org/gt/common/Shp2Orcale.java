@@ -21,11 +21,11 @@ import com.vividsolutions.jts.geom.Geometry;
 
 
 public class Shp2Orcale {
-    private final Map<String, String> fMap = new HashMap<>();
+    private final Map<String, String> fMap = new HashMap<String, String>();
 
     private SimpleFeatureSource featureSource = null;
     private String tableName = "";
-    private List<Fields> fields = new ArrayList<>();
+    private List<Fields> fields = new ArrayList<Fields>();
     //private CommonMethod cm = new CommonMethod();
 
     public Shp2Orcale(){
