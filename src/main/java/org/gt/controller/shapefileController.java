@@ -1,10 +1,13 @@
 package org.gt.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.gt.common.Shp2Orcale;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//@RestController
+@RestController
 public class shapefileController {
 	@RequestMapping("/hello")
     public String index() {
@@ -26,8 +29,6 @@ public class shapefileController {
         }
         return "Hello World";
     }
-	@RequestMapping("/")
-    public String indexs() {
-        return "index";
-    }
+
+
 }

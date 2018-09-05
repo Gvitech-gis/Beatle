@@ -10,4 +10,8 @@ public class FileManagerController {
     public String file_manager() {
         return "file_manager";
     }
+    @RequestMapping("/")
+    public String index() {
+        return "index";
+    }
 }
