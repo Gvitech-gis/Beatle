@@ -1,4 +1,4 @@
-package org.gt.controller;
+package org.gt.controller.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/start")
-@Api(tags = "测试Swagger2",description="简单的API")
+@Api(tags = "测试使用",description="简单的API")
 public class testController {
     // return json
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息note")
