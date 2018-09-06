@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dt.dao.jstreeMapper" >
+    <resultMap id="voResultMap" type="org.dt.vo.jstree" >
+    <id column="id" property="Id" jdbcType="VARCHAR" />
+    <result column="name" property="text" jdbcType="VARCHAR" />
+    <result column="parent" property="parent" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+  </resultMap>
+    <select id="model_tree" resultMap="voResultMap" >
+   		SELECT modelid as id ,modelname as `text`,icon,url,case parentid when '0' then '#' else parentid end  as `parent` FROM sys_models where isused=0 
+  	</select>
+ 
+    <select id="role_tree" resultMap="voResultMap" >
+   		SELECT roleid as id ,rolename as `text`,'fa fa-users' as icon,'' as url,'#'  as `parent` FROM sys_roles 
+  	</select>
+  	
+    <select id="modelfunc_tree" resultMap="voResultMap" >
+   		select modelid as id, modelname as `text` ,icon,url,case parentid when '0' then '#' else parentid end  as `parent`  from sys_models 
+		union all
+		select funcid as id, funcname as `text` ,icon,url ,case modelid when '0' then '#' else modelid end  as `parent` from sys_modelfuncs 
+  	</select>
+</mapper>

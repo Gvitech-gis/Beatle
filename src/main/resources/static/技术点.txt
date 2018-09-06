@@ -1,0 +1,9 @@
+1.springboot
+2.jpa
+3.postgresql 数据库
+4.thymeleaf 框架
+5.fastjson json解析
+6.druid 数据库检测框架
+7.dubbo 分布式服务框架
+8.Zookeeper 一个高效的分布式协调服务
+9.activiti 开元工作流程

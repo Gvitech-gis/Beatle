@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.gt.dao.sys_modelsMapper" >
+  <resultMap id="BaseResultMap" type="org.gt.bean.sys_models" >
+    <id column="modelid" property="modelid" jdbcType="VARCHAR" />
+    <result column="orderby" property="orderby" jdbcType="INTEGER" />
+    <result column="parentid" property="parentid" jdbcType="VARCHAR" />
+    <result column="modelname" property="modelname" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="isview" property="isview" jdbcType="VARCHAR" />
+    <result column="isused" property="isused" jdbcType="VARCHAR" />
+    <result column="creatuser" property="creatuser" jdbcType="VARCHAR" />
+    <result column="creattime" property="creattime" jdbcType="VARCHAR" />
+    <result column="modifyuser" property="modifyuser" jdbcType="VARCHAR" />
+    <result column="modifytime" property="modifytime" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="modelmenuswithmenusMap" type="org.gt.bean.sys_modelmenu" >
+    <id column="modelid" property="modelid" jdbcType="VARCHAR" />
+    <result column="modelmenuid" property="modelmenuid" jdbcType="VARCHAR" />
+    <result column="menuid" property="menuid" jdbcType="VARCHAR" />
+    <result column="action" property="action" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <select id="selectAll" resultMap="BaseResultMap" >
+   	SELECT * FROM sys_models 
+  </select>
+  
+   <select id="modelmenuswithmenus" resultMap="modelmenuswithmenusMap" >
+   	SELECT * FROM sys_modelmenu 
+  </select>
+  <select id="countAll"  resultType="java.lang.Integer" >
+    SELECT count(1) FROM sys_models where 1=1 
+    <if test="name!=null and name !=''" >
+      AND modelname LIKE CONCAT('%','${name}','%' ) 
+     </if>
+     
+  </select>
+   <delete id="delByID" >
+    delete from sys_models
+    where modelid = #{modelid,jdbcType=VARCHAR}
+  </delete>
+    <select id="serchByPage" resultMap="BaseResultMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     
+     select * FROM sys_models where 1=1 
+     <if test="pagerHelperRQ.searchString!=null and pagerHelperRQ.searchString !=''">
+      AND modelname LIKE CONCAT('%','${pagerHelperRQ.searchString}','%' ) 
+     </if>
+      <if test="pagerHelperRQ.sidx!=null and pagerHelperRQ.sidx !=''">
+      		  order by ${pagerHelperRQ.sidx}
+      		   <if test="pagerHelperRQ.sord!=null">
+      		     ${pagerHelperRQ.sord}
+     			</if>
+     	</if>
+       limit #{pagerHelperRQ.start,jdbcType=INTEGER},#{pagerHelperRQ.rows,jdbcType=INTEGER} 
+       
+      
+  </select>
+    <select id="serchById" resultMap="BaseResultMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     
+     select * FROM sys_models where 1=1 
+     <if test="id!=null and id !=''">
+      AND modelid= #{id,jdbcType=VARCHAR}
+     </if>
+  </select>
+
+   <select id="getMenus" resultMap="modelmenuswithmenusMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     
+     select * FROM sys_modelmenu where 1=1 
+     <if test="modelid!=null and modelid !=''">
+      AND modelid= #{modelid,jdbcType=VARCHAR}
+     </if>
+  </select>
+
+<!--<resultMap id="models_gridtreeMap" type="org.gt.vo.sys_models_gridtree" >-->
+    <!--<id column="id" property="id" jdbcType="VARCHAR" />-->
+    <!--<result column="text" property="text" jdbcType="VARCHAR" />-->
+    <!--<result column="expanded" property="expanded" jdbcType="BOOLEAN" />-->
+    <!--<result column="parent" property="parent" jdbcType="VARCHAR" />-->
+    <!--<result column="isLeaf" property="isLeaf" jdbcType="BOOLEAN" />-->
+  <!--</resultMap>-->
+    <select id="get_models_gridtree" resultMap="models_gridtreeMap" >
+
+     select * FROM sys_models
+  </select>
+  
+   <insert id="addone" parameterType="org.gt.bean.sys_models" >
+    
+   INSERT INTO sys_models
+            (modelid,
+             parentid,
+             orderby,
+             modelname,
+             description,
+             url,
+             isview,
+             isused,
+			 creatuser,
+			 creattime,
+			 modifyuser,
+			 modifytime,icon)
+    values (
+    UUID()
+    ,#{parentid,jdbcType=VARCHAR}
+    ,#{orderby,jdbcType=INTEGER}
+    ,#{modelname,jdbcType=VARCHAR}
+    ,#{description,jdbcType=VARCHAR}
+    ,#{url,jdbcType=VARCHAR}
+    ,#{isview,jdbcType=VARCHAR}
+    ,#{isused,jdbcType=VARCHAR}
+    , #{creatuser,jdbcType=VARCHAR}
+    , #{creattime,jdbcType=VARCHAR}
+    , #{modifyuser,jdbcType=VARCHAR}
+    , #{modifytime,jdbcType=VARCHAR}
+    , #{icon,jdbcType=VARCHAR}
+    )
+  </insert>
+   <update id="modify" parameterType="org.gt.bean.sys_models" >
+   UPDATE sys_models set 
+    modelname=#{modelname,jdbcType=VARCHAR},
+    parentid=#{parentid,jdbcType=VARCHAR},
+    description=#{description,jdbcType=VARCHAR},
+    url=#{url,jdbcType=VARCHAR},
+    isused=#{isused,jdbcType=VARCHAR},
+    isview=#{isview,jdbcType=VARCHAR},
+    creatuser=#{creatuser,jdbcType=VARCHAR},
+    creattime=#{creattime,jdbcType=VARCHAR},
+    modifyuser=#{modifyuser,jdbcType=VARCHAR},
+    modifytime=#{modifytime,jdbcType=VARCHAR},
+    icon=#{icon,jdbcType=VARCHAR}
+    where modelid=#{modelid,jdbcType=VARCHAR}
+  </update>
+  <insert id="addmodelmenu" parameterType="org.gt.bean.sys_modelmenu" >
+    
+   INSERT INTO sys_modelmenu
+            (modelmenuid,
+            modelid,
+             menuid,
+             action,
+             jsfunc)
+    values (
+    UUID()
+    ,#{modelid,jdbcType=VARCHAR}
+    ,#{menuid,jdbcType=VARCHAR}
+    ,#{action,jdbcType=VARCHAR}
+    ,#{jsfunc,jdbcType=VARCHAR}
+    )
+  </insert> 
+     <delete id="delBymodelID" >
+    delete from sys_modelmenu
+    where modelid = #{modelid,jdbcType=VARCHAR}
+  </delete>
+</mapper>

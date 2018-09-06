@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.gt.dao.sys_rolemodelMapper" >
+  <resultMap id="sys_rolemodelMap" type="org.gt.bean.sys_rolemodel" >
+    <id column="rolemodelid" property="rolemodelid" jdbcType="VARCHAR" />
+    <result column="modelid" property="modelid" jdbcType="VARCHAR" />
+    <result column="roleid" property="roleid" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <select id="selectAll" resultMap="sys_rolemodelMap" >
+   	SELECT * FROM sys_rolemodel 
+  </select>
+  <select id="selectByRoleid"  resultMap="sys_rolemodelMap" >
+    SELECT * FROM sys_rolemodel where 1=1 
+      AND   roleid = #{roleid,jdbcType=VARCHAR}
+  </select>
+  
+   <delete id="delByID" >
+    delete from sys_rolemodel
+    where roleid = #{roleid,jdbcType=VARCHAR}
+  </delete>
+   
+   <insert id="addone" parameterType="org.gt.bean.sys_rolemodel" >
+     INSERT INTO sys_rolemodel
+            (rolemodelid,
+             modelid,
+             roleid)
+    values (
+    UUID()
+    ,#{modelid,jdbcType=VARCHAR}
+    ,#{roleid,jdbcType=VARCHAR}
+    )
+  </insert>
+  
+</mapper>

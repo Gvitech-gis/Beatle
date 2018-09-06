@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.gt.dao.sys_departuserMapper" >
+  <resultMap id="sys_departuserMap" type="org.gt.bean.sys_departuser" >
+    <id column="departuserid" property="departuserid" jdbcType="VARCHAR" />
+    <result column="departid" property="departid" jdbcType="VARCHAR" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <select id="selectAll" resultMap="sys_departuserMap" >
+   	SELECT * FROM sys_departuser 
+  </select>
+  <select id="selectByuserid"  resultMap="sys_departuserMap" >
+    SELECT * FROM sys_departuser where 1=1 
+      AND   userid = #{userid,jdbcType=VARCHAR}
+  </select>
+  
+   <delete id="delByID" >
+    delete from sys_departuser
+    where userid = #{userid,jdbcType=VARCHAR}
+  </delete>
+   
+   <insert id="addone" parameterType="org.gt.bean.sys_departuser" >
+     INSERT INTO sys_departuser
+            (departuserid,
+             departid,
+             userid)
+    values (
+    UUID()
+    ,#{departid,jdbcType=VARCHAR}
+    ,#{userid,jdbcType=VARCHAR}
+    )
+  </insert>
+  
+</mapper>

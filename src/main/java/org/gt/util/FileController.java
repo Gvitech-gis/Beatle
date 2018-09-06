@@ -8,7 +8,7 @@ import java.io.OutputStream;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
-import org.gt.been.FileInfo;
+import org.gt.bean.FileInfo;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

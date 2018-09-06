@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.gt.dao.sys_menusMapper" >
+  <resultMap id="BaseResultMap" type="org.gt.bean.sys_menus" >
+    <id column="menuid" property="menuid" jdbcType="VARCHAR" />
+    <result column="orderby" property="orderby" jdbcType="INTEGER" />
+    <result column="menuname" property="menuname" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="creatuser" property="creatuser" jdbcType="VARCHAR" />
+    <result column="creattime" property="creattime" jdbcType="VARCHAR" />
+    <result column="modifyuser" property="modifyuser" jdbcType="VARCHAR" />
+    <result column="modifytime" property="modifytime" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <select id="selectAll" resultMap="BaseResultMap" >
+   	SELECT * FROM sys_menus 
+  </select>
+  <select id="countAll"  resultType="java.lang.Integer" >
+    SELECT count(1) FROM sys_menus where 1=1 
+    <if test="name!=null and name !=''" >
+      AND menuname LIKE CONCAT('%','${name}','%' ) 
+     </if>
+     
+  </select>
+   <delete id="delByID" >
+    delete from sys_menus
+    where menuid = #{menuid,jdbcType=VARCHAR}
+  </delete>
+    <select id="serchByPage" resultMap="BaseResultMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     
+     select * FROM sys_menus where 1=1 
+     <if test="pagerHelperRQ.searchString!=null and pagerHelperRQ.searchString !=''">
+      AND menuname LIKE CONCAT('%','${pagerHelperRQ.searchString}','%' ) 
+     </if>
+      <if test="pagerHelperRQ.sidx!=null and pagerHelperRQ.sidx !=''">
+      		  order by ${pagerHelperRQ.sidx}
+      		   <if test="pagerHelperRQ.sord!=null">
+      		     ${pagerHelperRQ.sord}
+     			</if>
+     	</if>
+       limit #{pagerHelperRQ.start,jdbcType=INTEGER},#{pagerHelperRQ.rows,jdbcType=INTEGER} 
+       
+      
+  </select>
+    <select id="serchById" resultMap="BaseResultMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     
+     select * FROM sys_menus where 1=1 
+     <if test="id!=null and id !=''">
+      AND menuid= #{id,jdbcType=VARCHAR}
+     </if>
+  </select>
+
+  <resultMap id="sys_menusvoMap" type="org.gt.vo.sys_menusvo" >
+    <id column="menuid" property="menuid" jdbcType="VARCHAR" />
+    <result column="orderby" property="orderby" jdbcType="INTEGER" />
+    <result column="menuname" property="menuname" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="creatuser" property="creatuser" jdbcType="VARCHAR" />
+    <result column="creattime" property="creattime" jdbcType="VARCHAR" />
+    <result column="modifyuser" property="modifyuser" jdbcType="VARCHAR" />
+    <result column="modifytime" property="modifytime" jdbcType="VARCHAR" />
+    <result column="modelid" property="modelid" jdbcType="VARCHAR" />
+    <result column="modelname" property="modelname" jdbcType="VARCHAR" />
+    <result column="action" property="action" jdbcType="VARCHAR" />
+    <result column="checked" property="checked" jdbcType="VARCHAR" />
+    <result column="jsfunc" property="jsfunc" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <select id="serchwithmodel" resultMap="sys_menusvoMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+
+    select menus.*,modelmenu.modelid,models.modelname,modelmenu.action,modelmenu.jsfunc,case when modelmenu.menuid is null then 'false' else 'true' end  checked FROM sys_menus as menus left join
+(select *from  sys_modelmenu where 1=1
+ <if test="modelid!=null and modelid !=''">
+      AND modelid=  #{modelid,jdbcType=VARCHAR}
+     </if>
+) as modelmenu
+on menus.menuid=modelmenu.menuid
+left join sys_models as models
+on modelmenu.modelid=models.modelid
+     <if test="modelid!=null and modelid !=''">
+      AND modelmenu.modelid= #{modelid,jdbcType=VARCHAR}
+     </if>
+  </select>
+  
+  
+<select id="serchWithPage" resultMap="sys_menusvoMap" >
+     select menus.*,modelmenu.modelid,modelmenu.jsfunc,modelmenu.action from sys_menus as menus left join sys_rolemodelmenu as rmm on menus.menuid= rmm.menuid left join sys_userrole as ur on rmm.roleid=ur.roleid left join sys_modelmenu as modelmenu on rmm.menuid=modelmenu.menuid and rmm.modelid=modelmenu.modelid  where 1=1
+     <if test="modelid!=null and modelid !=''">
+      AND rmm.modelid= #{modelid,jdbcType=VARCHAR}
+     </if>
+      <if test="userid!=null and userid !=''">
+      AND ur.userid= #{userid,jdbcType=VARCHAR}
+     </if>
+  </select>
+  
+  
+   <insert id="addone" parameterType="org.gt.bean.sys_menus" >
+   INSERT INTO sys_menus
+            (menuid,
+             orderby,
+             menuname,
+             description,
+             icon,
+			 creatuser,
+			 creattime,
+			 modifyuser,
+			 modifytime)
+    values (
+    UUID()
+    ,#{orderby,jdbcType=INTEGER}
+    ,#{menuname,jdbcType=VARCHAR}
+    ,#{description,jdbcType=VARCHAR}
+    ,#{icon,jdbcType=VARCHAR}
+    , #{creatuser,jdbcType=VARCHAR}
+    , #{creattime,jdbcType=VARCHAR}
+    , #{modifyuser,jdbcType=VARCHAR}
+    , #{modifytime,jdbcType=VARCHAR}
+    )
+  </insert>
+   <update id="modify" parameterType="org.gt.bean.sys_menus" >
+   UPDATE sys_menus set 
+    menuname=#{menuname,jdbcType=VARCHAR},
+    description=#{description,jdbcType=VARCHAR},
+    icon=#{icon,jdbcType=VARCHAR},
+    creatuser=#{creatuser,jdbcType=VARCHAR},
+    creattime=#{creattime,jdbcType=VARCHAR},
+    modifyuser=#{modifyuser,jdbcType=VARCHAR},
+    modifytime=#{modifytime,jdbcType=VARCHAR}
+    where menuid=#{menuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

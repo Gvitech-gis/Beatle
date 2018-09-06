@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.gt.dao.sys_departroleMapper" >
+  <resultMap id="BaseResultMap" type="org.gt.bean.sys_departrole" >
+    <id column="departroleid" property="departroleid" jdbcType="VARCHAR" />
+    <result column="departid" property="departid" jdbcType="VARCHAR" />
+    <result column="roleid" property="roleid" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+   <delete id="delByDepartid" >
+    delete from sys_departrole
+    where departid = #{departid,jdbcType=VARCHAR}
+  </delete>
+    <select id="serchByDeapartId" resultMap="BaseResultMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     select * FROM sys_departrole where 1=1 
+     <if test="id!=null and id !=''">
+      AND departid= #{id,jdbcType=VARCHAR}
+     </if>
+  </select>
+ 
+  
+   <insert id="adddepartrole" parameterType="org.gt.bean.sys_departrole" >
+	   INSERT INTO sys_departrole
+	            (
+	            departroleid,
+	            departid,
+				roleid)
+	    values (
+	    UUID()
+	    ,#{departid,jdbcType=VARCHAR}
+	    ,#{roleid,jdbcType=VARCHAR}
+	    )
+  </insert>
+  
+</mapper>

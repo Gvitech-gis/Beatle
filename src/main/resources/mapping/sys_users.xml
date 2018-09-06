@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.gt.dao.sys_usersMapper" >
+  <resultMap id="BaseResultMap" type="org.gt.bean.sys_users" >
+    <id column="departid" property="departid" jdbcType="VARCHAR" />
+    <result column="parentid" property="parentid" jdbcType="VARCHAR" />
+    <result column="departname" property="departname" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="creatuser" property="creatuser" jdbcType="VARCHAR" />
+    <result column="creattime" property="creattime" jdbcType="VARCHAR" />
+    <result column="modifyuser" property="modifyuser" jdbcType="VARCHAR" />
+    <result column="modifytime" property="modifytime" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <select id="selectAll" resultMap="BaseResultMap" >
+   	SELECT * FROM sys_users 
+  </select>
+  <select id="countAll"  resultType="java.lang.Integer" >
+    SELECT count(1) FROM sys_users where 1=1 
+    <if test="name!=null and name !=''" >
+      AND username LIKE CONCAT('%','${name}','%' ) 
+     </if>
+     
+  </select>
+  
+  
+  <select id="hasAU"  resultType="java.lang.Integer" >
+    select count(1) from (
+	SELECT
+	roleid,
+	models.url
+	FROM
+	sys_rolemodel as rolemodel left join sys_models as models on rolemodel.modelid=models.modelid 
+	UNION ALL
+	SELECT
+	roleid,
+	modelmenu.action as url
+	FROM
+	sys_rolemodelmenu as rolemodelmenu left join sys_modelmenu as modelmenu on rolemodelmenu.modelid=modelmenu.modelid 
+	UNION ALL
+	SELECT
+	roleid,
+	url
+	FROM
+	sys_rolemodelfunc as rolemodelfunc left join sys_modelfuncs  as modelfunc on rolemodelfunc.modelfuncid=modelfunc.funcid 
+	)as  a left join sys_userrole as b on a.roleid=b.roleid where 1=1  
+    
+    <if test="url!=null and url !=''" >
+      AND CONCAT('/',a.url)  LIKE CONCAT('%','${url}','%' )
+     </if>
+      <if test="userid!=null and userid !=''" >
+      AND b.userid ='${userid}'
+     </if>
+  </select>
+  
+   <delete id="delByID" >
+    delete from sys_users
+    where userid = #{userid,jdbcType=VARCHAR}
+  </delete>
+    <select id="serchByPage" resultMap="BaseResultMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     
+     select * FROM sys_users where 1=1 
+     <if test="pagerHelperRQ.searchString!=null and pagerHelperRQ.searchString !=''">
+      AND username LIKE CONCAT('%','${pagerHelperRQ.searchString}','%' ) 
+     </if>
+      <if test="pagerHelperRQ.sidx!=null and pagerHelperRQ.sidx !=''">
+      		  order by ${pagerHelperRQ.sidx}
+      		   <if test="pagerHelperRQ.sord!=null">
+      		     ${pagerHelperRQ.sord}
+     			</if>
+     	</if>
+       limit #{pagerHelperRQ.start,jdbcType=INTEGER},#{pagerHelperRQ.rows,jdbcType=INTEGER} 
+       
+      
+  </select>
+    <select id="serchById" resultMap="BaseResultMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     
+     select * FROM sys_users where 1=1 
+     <if test="id!=null and id !=''">
+      AND userid= #{id,jdbcType=VARCHAR}
+     </if>
+  </select>
+ <select id="serchByName" resultMap="BaseResultMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     
+     select * FROM sys_users where 1=1 
+     <if test="name!=null and name !=''">
+      AND username= #{name,jdbcType=VARCHAR}
+     </if>
+  </select>
+  
+   <insert id="addone" parameterType="org.gt.bean.sys_users" >
+    
+   INSERT INTO sys_users
+            (userid,
+orderby,
+username,
+description,
+`password`,
+rolename,
+departname,
+setting,
+isused,
+logincount,
+lastlogintime,
+creatuser,
+creattime,
+modifyuser,
+modifytime)
+    values (
+    UUID()
+    ,#{orderby,jdbcType=INTEGER}
+    ,#{username,jdbcType=VARCHAR}
+    ,#{description,jdbcType=VARCHAR}
+    , #{password,jdbcType=VARCHAR}
+    , #{rolename,jdbcType=VARCHAR}
+    , #{departname,jdbcType=VARCHAR}
+    , #{setting,jdbcType=VARCHAR}
+    , #{isused,jdbcType=VARCHAR}
+    , #{logincount,jdbcType=VARCHAR}
+    , #{lastlogintime,jdbcType=VARCHAR}
+    , #{creatuser,jdbcType=VARCHAR}
+    , #{creattime,jdbcType=VARCHAR}
+    , #{modifyuser,jdbcType=VARCHAR}
+    , #{modifytime,jdbcType=VARCHAR}
+    )
+  </insert>
+   <update id="modify" parameterType="org.gt.bean.sys_users" >
+   UPDATE sys_users set
+  	orderby=#{orderby,jdbcType=INTEGER}
+   ,username=#{username,jdbcType=VARCHAR}
+   ,description=#{description,jdbcType=VARCHAR}
+   ,`password`= #{password,jdbcType=VARCHAR}
+   ,rolename= #{rolename,jdbcType=VARCHAR}
+   ,departname= #{departname,jdbcType=VARCHAR}
+   ,setting= #{setting,jdbcType=VARCHAR}
+   ,isused= #{isused,jdbcType=VARCHAR}
+   ,logincount= #{logincount,jdbcType=VARCHAR}
+   ,lastlogintime= #{lastlogintime,jdbcType=VARCHAR}
+   ,creatuser= #{creatuser,jdbcType=VARCHAR}
+   ,creattime= #{creattime,jdbcType=VARCHAR}
+   ,modifyuser= #{modifyuser,jdbcType=VARCHAR}
+   ,modifytime= #{modifytime,jdbcType=VARCHAR}
+    where userid=#{userid,jdbcType=VARCHAR}
+  </update>
+</mapper>

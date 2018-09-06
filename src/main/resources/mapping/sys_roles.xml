@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.gt.dao.sys_rolesMapper" >
+  <resultMap id="BaseResultMap" type="org.gt.bean.sys_roles" >
+    <id column="roleid" property="roleid" jdbcType="VARCHAR" />
+    <result column="orderby" property="orderby" jdbcType="INTEGER" />
+    <result column="rolename" property="rolename" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="creatuser" property="creatuser" jdbcType="VARCHAR" />
+    <result column="creattime" property="creattime" jdbcType="VARCHAR" />
+    <result column="modifyuser" property="modifyuser" jdbcType="VARCHAR" />
+    <result column="modifytime" property="modifytime" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <select id="selectAll" resultMap="BaseResultMap" >
+   	SELECT * FROM sys_roles 
+  </select>
+  <select id="countAll"  resultType="java.lang.Integer" >
+    SELECT count(1) FROM sys_roles where 1=1 
+    <if test="name!=null and name !=''" >
+      AND rolename LIKE CONCAT('%','${name}','%' ) 
+     </if>
+     
+  </select>
+   <delete id="delByID" >
+    delete from sys_roles
+    where roleid = #{roleid,jdbcType=VARCHAR}
+  </delete>
+    <select id="serchByPage" resultMap="BaseResultMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     
+     select * FROM sys_roles where 1=1 
+     <if test="pagerHelperRQ.searchString!=null and pagerHelperRQ.searchString !=''">
+      AND rolename LIKE CONCAT('%','${pagerHelperRQ.searchString}','%' ) 
+     </if>
+      <if test="pagerHelperRQ.sidx!=null and pagerHelperRQ.sidx !=''">
+      		  order by ${pagerHelperRQ.sidx}
+      		   <if test="pagerHelperRQ.sord!=null">
+      		     ${pagerHelperRQ.sord}
+     			</if>
+     	</if>
+       limit #{pagerHelperRQ.start,jdbcType=INTEGER},#{pagerHelperRQ.rows,jdbcType=INTEGER} 
+       
+      
+  </select>
+    <select id="serchById" resultMap="BaseResultMap" ><!-- where name like #{name,jdbcType=VARCHAR} -->
+     
+     select * FROM sys_roles where 1=1 
+     <if test="id!=null and id !=''">
+      AND roleid= #{id,jdbcType=VARCHAR}
+     </if>
+  </select>
+
+  
+   <insert id="addone" parameterType="org.gt.bean.sys_roles" >
+    
+   INSERT INTO sys_roles
+            (roleid,
+             orderby,
+             rolename,
+             description,
+			 creatuser,
+			 creattime,
+			 modifyuser,
+			 modifytime)
+    values (
+    UUID()
+    ,#{orderby,jdbcType=INTEGER}
+    ,#{rolename,jdbcType=VARCHAR}
+    ,#{description,jdbcType=VARCHAR}
+    , #{creatuser,jdbcType=VARCHAR}
+    , #{creattime,jdbcType=VARCHAR}
+    , #{modifyuser,jdbcType=VARCHAR}
+    , #{modifytime,jdbcType=VARCHAR}
+    )
+  </insert>
+   <update id="modify" parameterType="org.gt.bean.sys_roles" >
+   UPDATE sys_roles set 
+    rolename=#{rolename,jdbcType=VARCHAR},
+    description=#{description,jdbcType=VARCHAR},
+    creatuser=#{creatuser,jdbcType=VARCHAR},
+    creattime=#{creattime,jdbcType=VARCHAR},
+    modifyuser=#{modifyuser,jdbcType=VARCHAR},
+    modifytime=#{modifytime,jdbcType=VARCHAR}
+    where roleid=#{roleid,jdbcType=VARCHAR}
+  </update>
+</mapper>

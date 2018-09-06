@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>数据源管理</title>
+<meta name="keywords" content="数据源管理">
+<meta name="description"
+	content="数据源管理">
+<link rel="shortcut icon" href="favicon.ico">
+<link href="../css/bootstrap.min.css?v=3.3.5" th:href="@{/css/bootstrap.min.css?v=3.3.5}" rel="stylesheet">
+<link href="../css/font-awesome.min.css?v=4.4.0"  th:href="@{/css/font-awesome.min.css?v=4.4.0}"  rel="stylesheet">
+<link href="../css/animate.min.css"  th:href="@{/css/animate.min.css}"  rel="stylesheet">
+<link href="../css/style.min.css?v=4.0.0"  th:href="@{/css/style.min.css?v=4.0.0}"  rel="stylesheet">
+<link href="../css/plugins/toastr/toastr.min.css"  th:href="@{/css/plugins/toastr/toastr.min.css}"  rel="stylesheet">
+<base target="_blank">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-12">
+				<form class="form-horizontal m-t" id="signupForm"
+					action="../cm_datasource/add.do">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">名称：</label>
+						<div class="col-sm-4">
+							<input id="name" name="dataSourcename" class="form-control"
+								aria-required="true" aria-invalid="true" type="text">
+						</div>
+						<label class="col-sm-2 control-label">链接方式：</label>
+						<div class="col-sm-4">
+						<select class="form-control m-b"  id="connectionType"  name="connectionType">
+                                        <option value="0">gviConnectionUnknown</option>
+                                        <option value="3">gviConnectionFireBird2x</option>
+                                        <option value="101">gviConnectionCms7Http</option>
+                                        <option value="102">gviConnectionCms7Https</option>
+                                    </select>
+							<input id="parentid" name="connectionType" class="form-control"
+								type="text" aria-required="true" aria-invalid="true"
+								class="valid">
+						</div>
+					</div>
+					
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label">服务器：</label>
+						<div class="col-sm-4">
+							<input id="server" name="server" class="form-control"
+								aria-required="true" aria-invalid="true" type="text">
+						</div>
+						<label class="col-sm-2 control-label">端口：</label>
+						<div class="col-sm-4">
+							<input id="port" name="port" class="form-control"
+								type="text" aria-required="true" aria-invalid="true"
+								class="valid">
+						</div>
+					</div>
+					
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label">数据库：</label>
+						<div class="col-sm-4">
+							<input id="database" name="database" class="form-control"
+								aria-required="true" aria-invalid="true" type="text">
+						</div>
+						<label class="col-sm-2 control-label">用户名：</label>
+						<div class="col-sm-4">
+							<input id="userName" name="userName" class="form-control"
+								type="text" 
+								class="valid">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label">密码：</label>
+						<div class="col-sm-4">
+							<input id="passwords" name="password" class="form-control"
+								 type="text">
+						</div>
+						<label class="col-sm-2 control-label">超时时间：</label>
+						<div class="col-sm-4">
+							<input id="timeouts" name="timeout" class="form-control"
+								type="text" 
+								class="valid">
+						</div>
+					</div>
+						
+					
+					
+					<div class="form-group">
+					<label class="col-sm-2 control-label">描述：</label>
+						<div class="col-sm-8">
+							<textarea rows="3" cols="20" id="description" name="description" class="form-control"
+								></textarea>
+						</div> 
+					</div>
+					<div class="form-group">
+						<div class="col-sm-4 col-sm-offset-3">
+							<button class="btn btn-primary" id="btnconnect" type="button">测试链接</button>
+						</div>
+						<div class="col-sm-4">
+							<button style="display:none;" class="btn btn-primary" id="btnSaveAndClose"
+								type="submit">保存</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+		<div id="mapbox"  style="display:none;width:500px;height:500px;">
+		
+	</div>
+	<script src="../js/jquery.min.js?v=2.1.4"  th:src="@{/js/jquery.min.js?v=2.1.4}" ></script>
+	<script src="../js/bootstrap.min.js?v=3.3.5"  th:src="@{/js/bootstrap.min.js?v=3.3.5}" ></script>
+	<script src="../js/content.min.js?v=1.0.0" th:src="@{/js/content.min.js?v=1.0.0}"></script>
+	<script src="../js/plugins/validate/jquery.validate.min.js" th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+	<script src="../js/plugins/validate/messages_zh.min.js" th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+	<script src="../js/demo/form-validate-demo.min.js" th:src="@{/js/demo/form-validate-demo.min.js}"></script>
+	<script src="../js/jquery.form.js" th:src="@{/js/jquery.form.js}"></script>
+    <script src="../js/plugins/toastr/toastr.min.js" th:src="@{/js/plugins/toastr/toastr.min.js}"></script>
+    <script >
+    	var main_pathurl="..";
+    </script>
+    <script src="../js/require.js"  th:src="@{/js/require.js}" data-main="../js/main"></script>
+	
+	<script type="text/javascript"
+		src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+	<script type="text/javascript">
+	/*
+	初始化消息提示
+	*/
+	toastr.options = {
+			  "closeButton": true,
+			  "debug": false,
+			  "progressBar": false,
+			  "positionClass": "toast-top-center",
+			  "onclick": null,
+			  "showDuration": "300",
+			  "hideDuration": "1000",
+			  "timeOut": "5000",
+			  "extendedTimeOut": "1000",
+			  "showEasing": "swing",
+			  "hideEasing": "linear",
+			  "showMethod": "fadeIn",
+			  "hideMethod": "fadeOut"
+			};
+	/*
+	初始化表单验证控件
+	*/
+	$.validator.setDefaults({
+	    submitHandler: function(form) {
+	    	postForm(form);
+	    	return false;
+	    }
+	});
+	/*
+	表单提交方法
+	*/
+	function postForm(form){
+		$(form).ajaxSubmit({
+            type: 'post', // 提交方式 get/post
+            url: '../cm_datasource/add.do', // 需要提交的 url,
+            success: function(data) { // data 保存提交后返回的数据，一般为 json 数据
+                // 此处可对 data 作相关处理
+                if(data.mst==0){
+                	toastr.success(data.msg);
+                	$(form).resetForm(); // 提交后重置表单
+                	if(btn&&btn=="close"){
+                		parent.reloadGrid();
+                		setTimeout(function(){
+                			$('.parent_win_closed', window.parent.document).click();
+                		},1000);
+                	}
+                	//setTimeout(function(){$("#frameView", window.parent.document).attr("src","");},1000);
+                	
+                }else{
+                	toastr.error(data.msg);
+                }
+            }
+        });
+	}
+		/*
+		是否显示改变事件
+		*/
+		function changeDisplay(obj) {
+			if ($(obj).is(':checked')) {
+				$("#display").val(1);
+			} else {
+				$("#display").val(0);
+			}
+		}
+		
+		/**
+		 *createby:赵晓杰 
+		 *description:检测数据源
+		 */
+		function testConnect(connectionType,server,port,database,userName,passwords){
+			requirejs(["citymaker/cm7_config", "citymaker/cm7_enum"], function (config, enums) {
+				var c = config.__g.new_ConnectionInfo;
+				if(connectionType==enums.gviConnectionType.gviConnectionFireBird2x){
+					c.connectionType = enums.gviConnectionType.gviConnectionFireBird2x;
+					c.database = database;
+					c.userName = userName;
+					c.password = passwords; //如发布服务时有密码则填
+				}else if(connectionType==enums.gviConnectionType.gviConnectionCms7Http){
+					c.connectionType = enums.gviConnectionType.gviConnectionCms7Http;
+					c.server = server;
+					c.database = database;
+					c.port = port;
+					c.userName = userName;
+					c.password = passwords; //如发布服务时有密码则填
+				}else{
+					toastr.error("测试不通过");
+				}
+				try {
+		            var ds = config.__g.dataSourceFactory.openDataSource(c);
+		        }
+		        catch (e) {
+		        	toastr.error("测试不通过");
+		        }
+		        toastr.success("测试通过");
+				$("#btnSaveAndClose").show();
+				$("#btnSaveAndClose").on("click", function() {
+					closeWind();
+				});
+			});
+		}
+		/*
+		生成表单验证并给保存并关闭按钮注册事件
+		*/
+		$(function() {
+			inits();
+			$("#btnconnect").on("click",function(){
+				testConnect($("#connectionType").val(),$("#server").val(),$("#port").val(),$("#database").val(),$("#userName").val(),$("#passwords").val());
+				
+			});
+			$("#signupForm").validate();
+		});
+		var btn;
+		function closeWind() {
+			btn="close";
+		}
+		
+		/*初始化三维*/
+		function inits() {
+			requirejs(['citymaker/cm7_init', 'citymaker/cm7_config', 'citymaker/cm7_enum', 'citymaker/cm7_command', 'citymaker/cm7_event', 'citymaker/event/onMouseClickSelect', 'citymaker/event/onObjectEditing', 'citymaker/event/onObjectEditFinish'], function(init, config, enums, command, events) {
+				init.initGlobe("mapbox");
+				config.__g.useEarthOrbitManipulator = enums.gviManipulatorMode.gviGoogleEarthManipulator;
+				config.datasetCRS = config.__g.crsFactory.createFromWKT(config.CRS_Type_WKT.Proj);
+				config.CRS_Type_WKT.Globe = config.__g.getCurrentCrsWKT();
+				var projectWKT = config.__g.getCurrentCrsWKT();
+				config.projectCRS = config.__g.crsFactory.createFromWKT(projectWKT);
+				//events.initControlEvents();
+				if(config.licenseServer.boolUse){
+					//isRenzheng();
+				}
+			});
+		}
+	</script>
+</body>
+</html>
