@@ -14,7 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource(value = "classpath:druid.properties")
+@PropertySource(value = "classpath:config/druid.properties")
 public class DruidConfiguration {
 
     @Bean(destroyMethod = "close", initMethod = "init")
